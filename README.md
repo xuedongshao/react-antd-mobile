@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+  # 使用说明
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+    此项目是用react做的移动端项目，所用技术栈：react + react-router + react-redux + scss + typescript + es6/7
 
-## Available Scripts
+  1. 安装模块
 
-In the project directory, you can run:
+      js版本：npx create-react-app [项目名称]
+      ts版本：npx create-react-app [项目名称] --template typescript
 
-### `yarn start`
+  2. 配置移动端开发
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+      1. yarn eject 暴露webpack配置
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+      2. yarn start 启动的时候会报错(./errorImg/1.jpg)
 
-### `yarn test`
+          解决：删除node_modules,重新安装,tsconfig.json下的"jsx":"react-jsx"改为"jsx":"react"
+          参考链接：https://github.com/facebook/create-react-app/issues/6099
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+      3. 移动端适配俩种方案
 
-### `yarn build`
+        一、 px转rem
+            yarn add lib-flexible postcss-px2rem
+            安装完模块后，设置 index.html
+            <meta name="viewport" content="width=device-width,inital-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+            然后项目入口文件 /src/index.tsx import 'lib-flexible';
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+            最后修改 /config/webpack.config.js
+              const px2rem = require('postcss-px2rem')
+              ```
+                      {
+                      // Options for PostCSS as we reference these options twice
+                      // Adds vendor prefixing based on your specified browser support in
+                      // package.json
+                      loader: require.resolve('postcss-loader'),
+                      options: {
+                        // Necessary for external CSS imports to work
+                        // https://github.com/facebook/create-react-app/issues/2677
+                        ident: 'postcss',
+                        plugins: () => [
+                          require('postcss-flexbugs-fixes'),
+                          require('postcss-preset-env')({
+                            autoprefixer: {
+                              flexbox: 'no-2009',
+                            },
+                            stage: 3,
+                          }),
+                          px2rem({remUnit: 37.5}),  // 添加的内容 remUnit为1rem应的px值，可以自己进行定义
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+                          // Adds PostCSS Normalize as the reset css with default options,
+                          // so that it honors browserslist config in package.json
+                          // which in turn let's users customize the target behavior as per their needs.
+                          postcssNormalize(),
+                        ],
+                        sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+                      },
+                    },
+              ```
 
-### `yarn eject`
+              参考链接：https://juejin.cn/post/6844903921241030664
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+        二、 px转vw
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  3.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
