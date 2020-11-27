@@ -1,21 +1,23 @@
 import React from 'react';
-import './style/App.scss';
+import styles from './style/App.scss';
+import './style/test.scss'
 
 function App() {
+
+  let a=[{s:'1'},1,2,3,4]
+  let b = [...a]
+  let c:any=b[0]
+      c.s='3'
+
+  console.log(a)
+  console.log(b)
+
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className={styles.App}>
+      <header className={styles.headerCss}>
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
